@@ -14,6 +14,12 @@ def test_api_summary():
     assert data["metrics"]["total_properties"] > 0
 
 
+def test_index_route():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "UnmaskLLC" in response.text
+
+
 def test_api_clusters():
     response = client.get("/api/v1/clusters")
     assert response.status_code == 200

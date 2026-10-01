@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnmaskLLC | Corporate Landlord Entity Resolution & Tenant Union Graph Engine</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vis.js Network CDN -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        #network-graph {
+            width: 100%;
+            height: 480px;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            background-color: #0f172a;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-red-600 p-2 rounded-lg text-white font-black text-xl tracking-wider">UL</div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+                        UnmaskLLC
+                        <span class="bg-red-900/80 text-red-300 text-xs px-2.5 py-0.5 rounded-full font-mono font-medium border border-red-700">Solidarity Engine v0.1</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Automated Corporate Landlord Entity Resolution & Cross-Building Tenant Graph</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="https://github.com/ajejfiejof/unmask-llc" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-md transition font-medium border border-slate-700 flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    GitHub Repo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Hero Stats Banner -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Analyzed Housing Units</span>
+                <div class="flex items-baseline mt-2">
+                    <span id="stat-units" class="text-3xl font-extrabold text-slate-900">--</span>
+                    <span class="ml-2 text-xs font-medium text-emerald-600">Across SF & NC</span>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Unmasked Shell Companies</span>
+                <div class="flex items-baseline mt-2">
+                    <span id="stat-clusters" class="text-3xl font-extrabold text-blue-600">--</span>
+                    <span class="ml-2 text-xs font-medium text-slate-500">Clusters Identified</span>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Monopolistic Landlords</span>
+                <div class="flex items-baseline mt-2">
+                    <span id="stat-monopolies" class="text-3xl font-extrabold text-red-600">--</span>
+                    <span class="ml-2 text-xs font-medium text-red-500">High Risk Portfolios</span>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">3-Year Evictions Tracked</span>
+                <div class="flex items-baseline mt-2">
+                    <span id="stat-evictions" class="text-3xl font-extrabold text-amber-600">--</span>
+                    <span class="ml-2 text-xs font-medium text-amber-500">Concentrated Evictions</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search & Control Panel -->
+        <section class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900">Property & Landlord Lookup</h2>
+                    <p class="text-sm text-slate-500">Search any street address (San Francisco, Raleigh, Charlotte) or shell entity name to unmask its parent corporate network.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="loadDemoData('all')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg font-semibold border border-slate-300">All Regions</button>
+                    <button onclick="loadDemoData('sf')" class="text-xs bg-red-50 hover:bg-red-100 text-red-700 px-3 py-2 rounded-lg font-semibold border border-red-200">San Francisco Focus</button>
+                    <button onclick="loadDemoData('nc')" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-2 rounded-lg font-semibold border border-blue-200">North Carolina Focus</button>
+                </div>
+            </div>
+
+            <div class="relative">
+                <input type="text" id="search-input" onkeyup="handleSearchKey(event)" placeholder="Type address (e.g. '1230 Market St' or 'Fayetteville St') or LLC name..." class="w-full px-4 py-3 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-sm text-base">
+                <button onclick="triggerSearch()" class="absolute right-2 top-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-md transition text-sm">
+                    Unmask Entity
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Workspace Grid: Network Graph & Portfolio Detail -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Column: Interactive Graph Visualizer -->
+            <div class="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            Interactive Entity Topology Graph
+                            <span id="active-cluster-badge" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded font-mono">Select Cluster</span>
+                        </h2>
+                        <p class="text-xs text-slate-500">Visualizing parent entities, shell LLCs, registered agents, and portfolio properties.</p>
+                    </div>
+                </div>
+
+                <div id="network-graph" class="relative">
+                    <div id="graph-loading" class="absolute inset-0 flex items-center justify-center text-slate-400 font-medium text-sm">
+                        Loading network graph visualization...
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="flex flex-wrap items-center justify-between text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200 gap-2">
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Parent Group</div>
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Shell LLC</div>
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span> Registered Agent</div>
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> Managing Member</div>
+                    <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block"></span> Property</div>
+                </div>
+            </div>
+
+            <!-- Right Column: Beneficial Owner Cluster & Organizing Panel -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- Cluster Summary Card -->
+                <div id="cluster-card" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-start justify-between border-b border-slate-100 pb-4">
+                        <div>
+                            <span id="card-risk-tag" class="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider bg-red-100 text-red-700 mb-1">
+                                High Risk
+                            </span>
+                            <h3 id="card-parent-name" class="text-xl font-black text-slate-900 leading-tight">
+                                Pacific Apex Real Estate Partners
+                            </h3>
+                            <p id="card-sub-info" class="text-xs text-slate-500 mt-1">4 Shell LLCs | 156 Housing Units</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-semibold text-slate-400 uppercase">Monopoly Score</span>
+                            <div id="card-score" class="text-2xl font-black text-red-600">84.5<span class="text-xs font-normal text-slate-400">/100</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Key Evidence -->
+                    <div class="space-y-2 text-xs">
+                        <div class="bg-slate-50 p-3 rounded-lg">
+                            <span class="font-bold text-slate-700 block mb-1">Shared Registered Agent & Infrastructure:</span>
+                            <p id="card-agents" class="text-slate-600 font-mono text-2xs">CORPORATE CREATIVE AGENTS INC (450 MISSION ST, SAN FRANCISCO, CA)</p>
+                        </div>
+
+                        <div>
+                            <span class="font-bold text-slate-700 block mb-1.5">Discovered Portfolio Addresses:</span>
+                            <ul id="card-properties-list" class="space-y-1 max-h-40 overflow-y-auto pr-1">
+                                <!-- Dynamic properties -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <button onclick="generateOrganizingPacketModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-lg transition text-sm flex items-center justify-center gap-2 shadow-sm">
+                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                        Generate Tenant Organizing Packet
+                    </button>
+                </div>
+
+                <!-- Landlord Cluster Selector List -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider text-slate-500">Unmasked Landlord Portfolios</h3>
+                    <div id="clusters-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                        <!-- Dynamic list items -->
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Tenant Organizing Packet Modal / Section -->
+        <div id="packet-section" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6 hidden">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Strategic Tenant Organizing Packet</h2>
+                    <p class="text-xs text-slate-500">Cross-building action plan and collective demand letter generated for tenant organizers.</p>
+                </div>
+                <button onclick="closePacketSection()" class="text-xs text-slate-500 hover:text-slate-700 underline font-medium">Close Packet</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Action Plan -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-slate-900 text-red-600 uppercase tracking-wider">Multi-Building Action Plan</h3>
+                    <ol id="packet-action-plan" class="space-y-2 text-xs text-slate-700 list-decimal list-inside bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <!-- Dynamic steps -->
+                    </ol>
+                </div>
+
+                <!-- Demand Letter Preview -->
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-slate-900 text-slate-600 uppercase tracking-wider">Sample Collective Demand Letter</h3>
+                    <textarea id="packet-demand-letter" readonly class="w-full h-48 p-3 text-xs font-mono bg-slate-900 text-emerald-400 rounded-lg focus:outline-none resize-none shadow-inner"></textarea>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-6 text-center text-xs mt-12">
+        <p>UnmaskLLC | Built for Tenant Unions & Solidarity Networks | San Francisco & North Carolina Data Pipeline</p>
+    </footer>
+
+    <!-- Frontend JS logic -->
+    <script>
+        let globalClusters = [];
+        let activeCluster = null;
+        let network = null;
+
+        async function initDashboard() {
+            try {
+                const res = await fetch('/api/v1/summary');
+                const data = await res.json();
+                
+                document.getElementById('stat-units').innerText = data.metrics.total_housing_units;
+                document.getElementById('stat-clusters').innerText = data.metrics.total_clusters;
+                document.getElementById('stat-monopolies').innerText = data.metrics.monopolistic_landlords_count;
+                document.getElementById('stat-evictions').innerText = data.metrics.total_evictions_3yr;
+
+                await loadClusters();
+            } catch (err) {
+                console.error("Error loading dashboard stats:", err);
+            }
+        }
+
+        async function loadClusters() {
+            const res = await fetch('/api/v1/clusters');
+            const data = await res.json();
+            globalClusters = data.clusters;
+            
+            renderClustersList(globalClusters);
+            if (globalClusters.length > 0) {
+                selectCluster(globalClusters[0].cluster_id);
+            }
+        }
+
+        function renderClustersList(clusters) {
+            const container = document.getElementById('clusters-list');
+            container.innerHTML = '';
+            
+            clusters.forEach(c => {
+                const item = document.createElement('div');
+                item.className = `p-3 rounded-lg border cursor-pointer transition flex items-center justify-between ${activeCluster && activeCluster.cluster_id === c.cluster_id ? 'border-red-500 bg-red-50/50' : 'border-slate-200 hover:border-slate-300 bg-slate-50'}`;
+                item.onclick = () => selectCluster(c.cluster_id);
+                item.innerHTML = `
+                    <div>
+                        <div class="font-bold text-xs text-slate-900">${c.canonical_name}</div>
+                        <div class="text-2xs text-slate-500">${c.total_properties} properties | ${c.total_units} units</div>
+                    </div>
+                    <span class="text-xs font-bold px-2 py-0.5 rounded font-mono ${c.monopoly_score > 60 ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}">${c.monopoly_score}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function selectCluster(clusterId) {
+            activeCluster = globalClusters.find(c => c.cluster_id === clusterId);
+            if (!activeCluster) return;
+
+            renderClustersList(globalClusters);
+
+            // Update Card
+            document.getElementById('card-parent-name').innerText = activeCluster.canonical_name;
+            document.getElementById('card-sub-info').innerText = `${activeCluster.shell_entities.length} Shell LLCs | ${activeCluster.total_units} Housing Units across ${activeCluster.total_properties} properties`;
+            document.getElementById('card-score').innerHTML = `${activeCluster.monopoly_score}<span class="text-xs font-normal text-slate-400">/100</span>`;
+            document.getElementById('card-risk-tag').innerText = `${activeCluster.risk_level} Risk`;
+            document.getElementById('card-agents').innerText = activeCluster.shared_registered_agents.join(' | ') || 'N/A';
+            document.getElementById('active-cluster-badge').innerText = activeCluster.canonical_name;
+
+            const propsList = document.getElementById('card-properties-list');
+            propsList.innerHTML = '';
+            activeCluster.properties.forEach(p => {
+                const li = document.createElement('li');
+                li.className = 'text-slate-600 flex justify-between items-center py-1 border-b border-slate-100';
+                li.innerHTML = `<span><b>${p.address}</b>, ${p.city}</span> <span class="bg-slate-200 text-slate-700 font-mono text-2xs px-1.5 py-0.5 rounded">${p.units} units</span>`;
+                propsList.appendChild(li);
+            });
+
+            // Load Graph
+            await renderGraph(clusterId);
+        }
+
+        async function renderGraph(clusterId) {
+            const graphContainer = document.getElementById('network-graph');
+            const res = await fetch(`/api/v1/graph/${clusterId}`);
+            const graphData = await res.json();
+
+            document.getElementById('graph-loading').style.display = 'none';
+
+            const data = {
+                nodes: new vis.DataSet(graphData.nodes),
+                edges: new vis.DataSet(graphData.edges)
+            };
+
+            const options = {
+                nodes: {
+                    font: { color: '#ffffff', size: 12 },
+                    borderWidth: 2
+                },
+                physics: {
+                    barnesHut: { gravitationalConstant: -3000, springLength: 95 }
+                }
+            };
+
+            if (network) network.destroy();
+            network = new vis.Network(graphContainer, data, options);
+        }
+
+        async function triggerSearch() {
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) return;
+
+            const res = await fetch(`/api/v1/search?q=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            
+            if (data.results.length > 0) {
+                selectCluster(data.results[0].cluster_id);
+            } else {
+                alert(`No corporate entities or properties found matching '${query}'.`);
+            }
+        }
+
+        function handleSearchKey(e) {
+            if (e.key === 'Enter') triggerSearch();
+        }
+
+        async function generateOrganizingPacketModal() {
+            if (!activeCluster) return;
+            const res = await fetch(`/api/v1/organize/${activeCluster.cluster_id}`);
+            const packet = await res.json();
+
+            const actionPlanEl = document.getElementById('packet-action-plan');
+            actionPlanEl.innerHTML = '';
+            packet.organizing_action_plan.forEach(step => {
+                const li = document.createElement('li');
+                li.className = 'py-1';
+                li.innerText = step;
+                actionPlanEl.appendChild(li);
+            });
+
+            document.getElementById('packet-demand-letter').value = packet.sample_demand_letter;
+            document.getElementById('packet-section').classList.remove('hidden');
+            document.getElementById('packet-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closePacketSection() {
+            document.getElementById('packet-section').classList.add('hidden');
+        }
+
+        function loadDemoData(region) {
+            if (region === 'sf') {
+                document.getElementById('search-input').value = 'Market St';
+            } else if (region === 'nc') {
+                document.getElementById('search-input').value = 'Fayetteville';
+            } else {
+                document.getElementById('search-input').value = '';
+            }
+            triggerSearch();
+        }
+
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>

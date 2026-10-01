@@ -1,16 +1,16 @@
-# UnmaskLLC 🚩
-> **Automated Corporate Landlord Entity Resolution & Cross-Building Tenant Union Graph Engine**
+# UnmaskLLC 🕸️
+> **Automated Corporate Landlord Entity Resolution & Property Network Graph Platform**
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/badge/tests-passing-brightgreen.svg)]()
-[![Focus: SF & NC](https://img.shields.io/badge/regions-San%20Francisco%20%7C%20North%20Carolina-red.svg)]()
+[![Focus: SF & NC](https://img.shields.io/badge/regions-San%20Francisco%20%7C%20North%20Carolina-blue.svg)]()
 
-**UnmaskLLC** is an open-source civic tech and labor/tenant organizing platform that demystifies corporate real estate ownership networks. Corporate landlords and private equity firms fragment their portfolios behind hundreds of single-asset shell LLCs (e.g. `1230 Market Street LLC`, `1232 Market Street LLC`) to obscure monopoly control, evade public accountability, and prevent tenant organizing.
+**UnmaskLLC** is an open-source entity resolution platform that demystifies corporate real estate ownership networks. Real estate investment firms fragment their portfolios behind hundreds of single-asset shell LLCs (e.g. `1230 Market Street LLC`, `1232 Market Street LLC`) to obscure portfolio concentration, evade public accountability, and isolate tenant bargaining power.
 
-UnmaskLLC inverts this power dynamic by applying **Automated Disjoint-Set (Union-Find) Entity Resolution**, **Network Graph Analytics**, and **Address Normalization** to raw property deeds, registered agent filings, and tax assessor records. 
+UnmaskLLC addresses this transparency gap by applying **Automated Disjoint-Set (Union-Find) Entity Resolution**, **Network Graph Analytics**, and **Address Normalization** to public property deeds, registered agent filings, and tax assessor records. 
 
-With UnmaskLLC, tenants in **San Francisco** or **North Carolina (Raleigh, Durham, Charlotte)** can type in any street address and instantly discover all sister properties in their city or region owned by the same hidden parent entity—generating instant multi-building tenant union organizing packets and collective demand letters.
+With UnmaskLLC, users in **San Francisco** or **North Carolina (Raleigh, Durham, Charlotte)** can input any street address to discover all sister properties owned by the same underlying parent entity—generating multi-building research reports and tenant organizing packets.
 
 ---
 
@@ -139,14 +139,14 @@ Resolved 7 properties and 9 corporate entities into 3 beneficial ownership clust
 
 ---
 
-## 🚩 Political Economy Rationale
+## 🏛️ Political Economy & Corporate Transparency Rationale
 
-Housing is a fundamental human right, not a financial speculative asset. Capitalist real estate firms intentionally obscure their beneficial ownership to isolate tenant bargaining power and avoid legal scrutiny. 
+Housing markets are increasingly financialized by private equity firms operating through complex nested corporate structures. By intentionally obscuring beneficial ownership behind shell entities, corporate real estate providers fragment community oversight and isolate tenant negotiations.
 
-By building **open, worker-and-tenant-controlled counter-intelligence software**, UnmaskLLC helps tenants transition from single-building grievances to **regional multi-property tenant unions** capable of negotiating collective agreements and defending working-class communities.
+By providing **open-source corporate entity resolution infrastructure**, UnmaskLLC equips researchers, civic advocates, and tenant associations with empirical data to transition from isolated, single-building inquiries to **regional multi-property analysis** and collective bargaining.
 
 ---
 
 ## 📄 License
 
-Distributed under the MIT License. Built for community organizers, tenant unions, and civic tech advocates.
+Distributed under the MIT License. Built for community researchers, tenant unions, and open data advocates.

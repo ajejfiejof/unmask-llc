@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "unmask-llc"
 version = "0.1.0"
-description = "Automated Corporate Landlord Entity Resolution & Tenant Union Graph Engine"
+description = "Automated Corporate Landlord Entity Resolution & Property Graph Engine"
 readme = "README.md"
-authors = [{ name = "Solidarity Tech Collective" }]
+authors = [{ name = "UnmaskLLC Contributors" }]
 license = { text = "MIT" }
 classifiers = [
     "Programming Language :: Python :: 3",

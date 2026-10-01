@@ -90,7 +90,7 @@ AND CO-SIGNING TENANTS FROM SISTER PORTFOLIO PROPERTIES:
 
 To the Management of {cluster.canonical_name},
 
-We, the tenants of {target_prop.address}, writing in solidarity with tenants across your portfolio of {cluster.total_units} total housing units, hereby serve formal notice of our collective tenant association.
+We, the tenants of {target_prop.address}, writing in coordination with residents across your portfolio of {cluster.total_units} total housing units, hereby serve formal notice of our collective tenant association.
 
 Our investigation has revealed that despite operating under separate LLC shell entities, our properties are managed under the unified ownership of {cluster.canonical_name}.
 
@@ -100,7 +100,7 @@ WE HEREBY DEMAND THE FOLLOWING IMMEDIATE REMEDIAL ACTIONS:
 3. Recognition of the Tenant Association as the exclusive bargaining representative for residents.
 4. Formal sit-down meeting with principal officers within 14 calendar days.
 
-Signed in Solidarity,
+Signed,
 
 The Joint Tenant Council of {target_prop.address} & Sister Portfolio Properties
 UnmaskLLC Verification Reference: Cluster ID {cluster.cluster_id} (Risk Level: {cluster.risk_level})

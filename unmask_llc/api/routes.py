@@ -132,13 +132,55 @@ def generate_organizing_packet(cluster_id: str, address: Optional[str] = None):
     return packet.model_dump()
 
 
+from fastapi.responses import Response
+from unmask_llc.core.pdf_exporter import PDFDossierExporter
+from unmask_llc.data.live_ingestor import fetch_live_sf_data
+
+
+@router.get("/dossier/pdf/{cluster_id}")
+def download_pdf_dossier(cluster_id: str, address: Optional[str] = None):
+    target_cluster = None
+    for c in clusters_store:
+        if c.cluster_id == cluster_id:
+            target_cluster = c
+            break
+
+    if not target_cluster:
+        raise HTTPException(status_code=404, detail="Cluster not found")
+
+    planner = TenantOrganizingPlanner()
+    target_addr = address or (target_cluster.properties[0].address if target_cluster.properties else "Target Property")
+    packet = planner.generate_packet(target_cluster, target_addr)
+
+    exporter = PDFDossierExporter()
+    pdf_bytes = exporter.generate_pdf_bytes(packet)
+
+    headers = {"Content-Disposition": f"attachment; filename=UnmaskLLC_Dossier_{cluster_id}.pdf"}
+    return Response(content=pdf_bytes, media_type="application/pdf", headers=headers)
+
+
+@router.post("/ingest/live/sf")
+def ingest_live_sf_data(limit: int = 50):
+    global properties_store, entities_store
+    new_props, new_entities = fetch_live_sf_data(limit=limit)
+    if new_props:
+        properties_store.extend(new_props)
+        entities_store.extend(new_entities)
+        refresh_clusters()
+
+    return {
+        "status": "success",
+        "fetched_properties": len(new_props),
+        "total_clusters": len(clusters_store),
+    }
+
+
 @router.post("/ingest/csv")
 async def ingest_csv(file: UploadFile = File(...)):
     global properties_store, entities_store
     contents = await file.read()
     df = pd.read_csv(io.BytesIO(contents))
 
-    # Expect columns: address, city, state, zip_code, units, recorded_owner_name, registered_agent_address
     new_props = []
     new_entities = []
 
